@@ -3,8 +3,11 @@
     package="com.jcbriones.gmu.remotecamera">
 
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="18" />
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
 
     <application
         android:allowBackup="true"
@@ -22,6 +25,7 @@
         </activity>
         <activity android:name=".RemoteCameraActivity" />
         <activity android:name=".CameraControllerActivity"></activity>
+
     </application>
 
 </manifest>
