@@ -29,25 +29,24 @@ public class StreamBackendClient {
             Header[] headers,
             RequestParams params,
             AsyncHttpResponseHandler responseHandler) {
+        System.out.println(params.toString());
 
         asyncClient.get(context, getAbsoluteUrl(url), headers, params, responseHandler);
     }
 
     public static void putImage(
             Context context,
-            String userUUID,
             String photoUri,
             JsonHttpResponseHandler responseHandler) {
         RequestParams params = new RequestParams();
         File photoFile = new File(photoUri);
         try {
             params.put("upload", photoFile);
-            params.put("myUUID", userUUID);
         } catch(FileNotFoundException e) {
             e.printStackTrace();
             return;
         }
-        asyncClient.post(context, getAbsoluteUrl("/index.php"), params, responseHandler);
+        asyncClient.post(context, getAbsoluteUrl("/upload.php"), params, responseHandler);
     }
 
     public static void post(

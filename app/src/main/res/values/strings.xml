@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Remote Camera</string>
 
-    <string name="backend_url">"https://netcomm.fourguystech.com/old_api"</string>
+    <string name="backend_url">"http://madeby.jcbriones.com/api_477"</string>
 
     <string name="btnTake">Take Picture</string>
     <string name="btnUpload">Upload Picture</string>

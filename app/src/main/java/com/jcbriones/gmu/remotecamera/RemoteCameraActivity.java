@@ -37,7 +37,6 @@ import cz.msebera.android.httpclient.message.BasicHeader;
 public class RemoteCameraActivity extends AppCompatActivity {
 
     private Context myContext = MainActivity.getAppContext();
-    private String proj = "Remote Camera for CS 477";
 
     private static final int ACTION_TAKE_PHOTO_B = 1;
 
@@ -136,20 +135,17 @@ public class RemoteCameraActivity extends AppCompatActivity {
     Button.OnClickListener mUploadPhoto = new Button.OnClickListener() {
         @Override
         public void onClick(View v) {
-            uploadPhoto(v, proj);
+            uploadPhoto(v);
             finish();
         }
     };
 
-    private void uploadPhoto(View v, String proj) {
-        final String finalProj = proj;
-
+    private void uploadPhoto(View v) {
         List<Header> headers = new ArrayList<Header>();
         headers.add(new BasicHeader("Accept", "application/json"));
 
         StreamBackendClient.putImage(
                 myContext,
-                proj,
                 mCurrentPhotoPath,
                 new JsonHttpResponseHandler() {
                     // { "status": "processing", "uuid": "fc00d974-f167-41cc-b1da-705c6f4b643a" }
@@ -157,10 +153,12 @@ public class RemoteCameraActivity extends AppCompatActivity {
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         Toast toast;
 
+                        System.out.println(response.toString());
+
                         try {
                             String data = response.getString("status");
-                            if (data.equals("processing")) {
-                                toast = Toast.makeText(MainActivity.getAppContext(), "photo is uploading", Toast.LENGTH_SHORT);
+                            if (data.equals("done")) {
+                                toast = Toast.makeText(MainActivity.getAppContext(), "Photo Uploaded", Toast.LENGTH_SHORT);
                                 toast.show();
                             }
                         } catch (JSONException e) {
@@ -169,7 +167,8 @@ public class RemoteCameraActivity extends AppCompatActivity {
                     }
 
                     public void onFailure(int statusCode, Header[] headers, JSONArray response) {
-                        // TODO should handle error conditions
+                        Toast toast = Toast.makeText(MainActivity.getAppContext(), "Photo Upload Failed. " + response.toString(), Toast.LENGTH_SHORT);
+                        toast.show();
                     }
                 });
     }
