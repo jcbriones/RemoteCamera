@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Remote Camera</string>
+    <string name="app_name">InstaMason</string>
 
     <string name="backend_url">"http://madeby.jcbriones.com/api_477"</string>
 
