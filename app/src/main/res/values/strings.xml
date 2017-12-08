@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">InstaMason</string>
+    <string name="app_name">Remote Camera</string>
 
     <string name="backend_url">"http://madeby.jcbriones.com/api_477"</string>
 
@@ -7,6 +7,4 @@
     <string name="btnUpload">Upload Picture</string>
     <string name="cannot">Cannot</string>
     <string name="album_name">RemoteCamera</string>
-
-    <string name="pref_authorid">streamUserUUID</string>
 </resources>

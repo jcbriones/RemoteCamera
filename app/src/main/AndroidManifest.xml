@@ -51,6 +51,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.jcbriones.gmu.remotecamera.MainActivity" />
         </activity>
+        <activity android:name=".MyCamera">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jcbriones.gmu.remotecamera.MainActivity" />
+        </activity>
 
         <provider
             android:name="android.support.v4.content.FileProvider"

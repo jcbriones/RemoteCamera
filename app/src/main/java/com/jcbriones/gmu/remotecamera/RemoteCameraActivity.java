@@ -148,7 +148,6 @@ public class RemoteCameraActivity extends AppCompatActivity {
                 myContext,
                 mCurrentPhotoPath,
                 new JsonHttpResponseHandler() {
-                    // { "status": "processing", "uuid": "fc00d974-f167-41cc-b1da-705c6f4b643a" }
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                         Toast toast;
