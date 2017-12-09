@@ -1,6 +1,9 @@
 package com.jcbriones.gmu.remotecamera;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,26 +22,16 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class CameraControllerActivity extends AppCompatActivity {
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_camera_controller);
-//    }
-
+public class CameraControllerActivity extends Activity {
 
     public void onViewAllPicturesButtonClick(View v) {
         Intent controllerIntent = new Intent(this, PhotoGalleryActivity.class);
         startActivity(controllerIntent);
     }
 
-
-    //TextView textResponse;
     EditText editTextAddress, editTextPort;
     ImageButton buttonConnect;
-
-    EditText welcomeMsg;
+    ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +41,7 @@ public class CameraControllerActivity extends AppCompatActivity {
         editTextAddress = (EditText) findViewById(R.id.editTextAddress);
         editTextPort = (EditText) findViewById(R.id.editTextPort);
         buttonConnect = (ImageButton) findViewById(R.id.controllerTakePicture);
-        //textResponse = (TextView) findViewById(R.id.response);
-
-        welcomeMsg = (EditText)findViewById(R.id.editTextMessage);
+        imageView = (ImageView) findViewById(R.id.image_result);
 
         buttonConnect.setOnClickListener(buttonConnectOnClickListener);
 
@@ -60,19 +52,44 @@ public class CameraControllerActivity extends AppCompatActivity {
         @Override
         public void onClick(View arg0) {
 
-            String tMsg = welcomeMsg.getText().toString();
-            if(tMsg.equals("")){
-                tMsg = null;
-                Toast.makeText(CameraControllerActivity.this, "No Welcome Msg sent", Toast.LENGTH_SHORT).show();
-            }
-
             MyClientTask myClientTask = new MyClientTask(editTextAddress
                     .getText().toString(), Integer.parseInt(editTextPort
                     .getText().toString()),
-                    tMsg);
+                    "shot");
             myClientTask.execute();
         }
     };
+
+    private void setPic() {
+        /* Get the size of the ImageView */
+        int targetW = imageView.getWidth();
+        int targetH = imageView.getHeight();
+
+		/* Get the size of the image */
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+//        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+		/* Figure out which way needs to be reduced less */
+        int scaleFactor = 1;
+        if ((targetW > 0) || (targetH > 0)) {
+            scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+        }
+
+		/* Set bitmap options to scale the image decode target */
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+		/* Decode the JPEG file into a Bitmap */
+//        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+//
+//		/* Associate the Bitmap to the ImageView */
+//        imageView.setImageBitmap(bitmap);
+//        imageView.setVisibility(View.VISIBLE);
+    }
 
     public class MyClientTask extends AsyncTask<Void, Void, Void> {
 
@@ -104,7 +121,16 @@ public class CameraControllerActivity extends AppCompatActivity {
                     dataOutputStream.writeUTF(msgToServer);
                 }
 
-                response = dataInputStream.readUTF();
+                //response = dataInputStream.readUTF();
+                byte[] byteArray;
+                byte mByte;
+//                foreach(mByte = dataInputStream.readByte()) {
+//                    byteArray[] = mByte;
+//                }
+
+//                // Should be done in the UI thread
+//                Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+//                imageView.setImageBitmap(bmp);
 
             } catch (UnknownHostException e) {
                 // TODO Auto-generated catch block

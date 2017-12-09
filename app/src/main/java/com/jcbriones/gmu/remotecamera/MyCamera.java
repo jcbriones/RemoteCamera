@@ -1,8 +1,10 @@
 package com.jcbriones.gmu.remotecamera;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -15,6 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
@@ -38,11 +42,12 @@ public class MyCamera extends Activity {
     private CameraPreview mCameraPreview;
     private ServerSocket serverSocket;
     private TextView info;
+    private File pictureFile;
 
     private static final String JPEG_FILE_PREFIX = "IMG_";
     private static final String JPEG_FILE_SUFFIX = ".jpg";
 
-    protected ImageButton captureButton;
+    protected Button captureButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +59,7 @@ public class MyCamera extends Activity {
         preview.addView(mCameraPreview);
         info = (TextView) findViewById(R.id.info);
 
-        captureButton = (ImageButton) findViewById(R.id.button_capture);
+        captureButton = (Button) findViewById(R.id.button_capture);
         captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,7 +105,7 @@ public class MyCamera extends Activity {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
             try {
-                File pictureFile = getOutputMediaFile();
+                pictureFile = getOutputMediaFile();
                 if (pictureFile == null) {
                     return;
                 }
@@ -108,6 +113,8 @@ public class MyCamera extends Activity {
                 FileOutputStream fos = new FileOutputStream(pictureFile);
                 fos.write(data);
                 fos.close();
+
+                mCamera.startPreview();
             } catch (FileNotFoundException e) {
             } catch (IOException e) {
             }
@@ -195,7 +202,7 @@ public class MyCamera extends Activity {
                     @Override
                     public void run() {
                         info.setText("Connect at: "
-                                + ip +  serverSocket.getLocalPort());
+                                + ip + "Port: " + serverSocket.getLocalPort());
                     }
                 });
 
@@ -214,11 +221,9 @@ public class MyCamera extends Activity {
 
                     count++;
 
-                    message += "#" + count + " from " + socket.getInetAddress()
-                            + ":" + socket.getPort() + "\n"
-                            + "Msg from client: " + messageFromClient + "\n";
+                    message += messageFromClient + "\n";
 
-                    if (messageFromClient.equals("123")) {
+                    if (messageFromClient.equals("shot")) {
                         MyCamera.this.runOnUiThread(new Runnable() {
 
                             @Override
@@ -237,9 +242,17 @@ public class MyCamera extends Activity {
                         });
                     }
 
+// TODO:
+//                    String msgReply = "Hello from Android, you are #" + count;
+//                    dataOutputStream.writeUTF(msgReply);
 
-                    String msgReply = "Hello from Android, you are #" + count;
-                    dataOutputStream.writeUTF(msgReply);
+                    String filePath = pictureFile.getPath();
+                    Bitmap bmp = BitmapFactory.decodeFile(filePath);
+
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                    dataOutputStream.write(byteArray);
 
                 }
             } catch (IOException e) {
