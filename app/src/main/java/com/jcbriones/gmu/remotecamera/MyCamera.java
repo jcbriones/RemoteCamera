@@ -1,5 +1,6 @@
 package com.jcbriones.gmu.remotecamera;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -8,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
@@ -42,7 +44,8 @@ public class MyCamera extends Activity {
     private CameraPreview mCameraPreview;
     private ServerSocket serverSocket;
     private TextView info;
-    private File pictureFile;
+    private String fileName;
+    String mCurrentPhotoPath;
 
     private static final String JPEG_FILE_PREFIX = "IMG_";
     private static final String JPEG_FILE_SUFFIX = ".jpg";
@@ -58,6 +61,7 @@ public class MyCamera extends Activity {
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
         preview.addView(mCameraPreview);
         info = (TextView) findViewById(R.id.info);
+        fileName = "tosend.jpg";
 
         captureButton = (Button) findViewById(R.id.button_capture);
         captureButton.setOnClickListener(new View.OnClickListener() {
@@ -67,8 +71,8 @@ public class MyCamera extends Activity {
             }
         });
 
-        Thread socketServerThread = new Thread(new SocketServerThread());
-        socketServerThread.start();
+        Thread serverSocketThread = new Thread(new ServerSocketThread());
+        serverSocketThread.start();
     }
 
     @Override
@@ -79,7 +83,6 @@ public class MyCamera extends Activity {
             try {
                 serverSocket.close();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
         }
@@ -105,12 +108,13 @@ public class MyCamera extends Activity {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
             try {
-                pictureFile = getOutputMediaFile();
-                if (pictureFile == null) {
+                //File mediaFile = getOutputMediaFile();
+                File mediaFile = setUpPhotoFile();
+                if (mediaFile == null) {
                     return;
                 }
 
-                FileOutputStream fos = new FileOutputStream(pictureFile);
+                FileOutputStream fos = new FileOutputStream(mediaFile);
                 fos.write(data);
                 fos.close();
 
@@ -123,53 +127,50 @@ public class MyCamera extends Activity {
     };
 
     private File getOutputMediaFile() throws IOException  {
-//        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"RemoteCamera");
-//        if (!mediaStorageDir.exists()) {
-//            if (!mediaStorageDir.mkdirs()) {
-//                Log.d("RemoteCamera", "failed to create directory");
-//                return null;
-//            }
-//        }
-//        // Create a media file name
-//        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
-//                .format(new Date());
-//        File mediaFile;
-//        mediaFile = new File(mediaStorageDir.getPath() + File.separator
-//                + "IMG_" + timeStamp + ".jpg");
-//
-//        return mediaFile;
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),"RemoteCamera");
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("RemoteCamera", "failed to create directory");
+                return null;
+            }
+        }
+        // Create a media file name
+        File mediaFile;
+        mediaFile = new File(mediaStorageDir.getPath() + File.separator
+                + fileName);
 
+        return mediaFile;
+    }
+
+    // NEW STUFF
+
+    private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = JPEG_FILE_PREFIX + timeStamp + "_";
 //        File albumF = getAlbumDir();
         File albumF = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File imageF = File.createTempFile(imageFileName, JPEG_FILE_SUFFIX, albumF);
-        //mCurrentPhotoPath = "file:" + imageF.getAbsolutePath();
+        mCurrentPhotoPath = "file:" + imageF.getAbsolutePath();
         return imageF;
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.my_camera, menu);
-//        return true;
-//    }
+    private File setUpPhotoFile() throws IOException {
+        File f = createImageFile();
+        mCurrentPhotoPath = f.getAbsolutePath();
+        return f;
+    }
 
-    private class SocketServerThread extends Thread {
-
-        static final int SocketServerPORT = 8080;
-        int count = 0;
+    public class ServerSocketThread extends Thread {
+        private static final int SocketServerPORT = 8080;
 
         String ip = "";
-        String message = "";
 
         @Override
         public void run() {
             Socket socket = null;
-            DataInputStream dataInputStream = null;
-            DataOutputStream dataOutputStream = null;
 
+            // Get IP Address of the device
             try {
                 Enumeration<NetworkInterface> enumNetworkInterfaces = NetworkInterface
                         .getNetworkInterfaces();
@@ -190,10 +191,10 @@ public class MyCamera extends Activity {
                 }
 
             } catch (SocketException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
                 ip += "Something Wrong! " + e.toString() + "\n";
             }
+
 
             try {
                 serverSocket = new ServerSocket(SocketServerPORT);
@@ -201,94 +202,22 @@ public class MyCamera extends Activity {
 
                     @Override
                     public void run() {
-                        info.setText("Connect at: "
-                                + ip + "Port: " + serverSocket.getLocalPort());
-                    }
-                });
-
+                        info.setText("Connect at: " + ip
+                                + "Port: " + serverSocket.getLocalPort());
+                    }});
 
                 while (true) {
                     socket = serverSocket.accept();
-                    dataInputStream = new DataInputStream(
-                            socket.getInputStream());
-                    dataOutputStream = new DataOutputStream(
-                            socket.getOutputStream());
-
-                    String messageFromClient = "";
-
-                    //If no message sent from client, this code will block the program
-                    messageFromClient = dataInputStream.readUTF();
-
-                    count++;
-
-                    message += messageFromClient + "\n";
-
-                    if (messageFromClient.equals("shot")) {
-                        MyCamera.this.runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                captureButton.performClick();
-                            }
-                        });
-                    }
-                    else {
-                        MyCamera.this.runOnUiThread(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                Toast.makeText(MyCamera.this, message, Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-
-// TODO:
-//                    String msgReply = "Hello from Android, you are #" + count;
-//                    dataOutputStream.writeUTF(msgReply);
-
-                    String filePath = pictureFile.getPath();
-                    Bitmap bmp = BitmapFactory.decodeFile(filePath);
-
-                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                    byte[] byteArray = stream.toByteArray();
-                    dataOutputStream.write(byteArray);
-
+                    FileTxThread fileTxThread = new FileTxThread(socket);
+                    fileTxThread.start();
                 }
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-                final String errMsg = e.toString();
-                MyCamera.this.runOnUiThread(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        Toast.makeText(MyCamera.this, errMsg, Toast.LENGTH_LONG).show();
-                    }
-                });
-
             } finally {
                 if (socket != null) {
                     try {
                         socket.close();
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-
-                if (dataInputStream != null) {
-                    try {
-                        dataInputStream.close();
-                    } catch (IOException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-                }
-
-                if (dataOutputStream != null) {
-                    try {
-                        dataOutputStream.close();
                     } catch (IOException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -299,5 +228,67 @@ public class MyCamera extends Activity {
 
     }
 
+    public class FileTxThread extends Thread {
+        Socket socket;
 
+        FileTxThread(Socket socket){
+            this.socket= socket;
+        }
+
+        @Override
+        public void run() {
+            MyCamera.this.runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    captureButton.performClick();
+                }});
+
+            try {
+                Thread.sleep(1000);
+            }
+            catch (InterruptedException e) {
+
+            }
+            File file = new File(mCurrentPhotoPath);
+
+            byte[] bytes = new byte[(int) file.length()];
+            BufferedInputStream bis;
+            try {
+                bis = new BufferedInputStream(new FileInputStream(file));
+                bis.read(bytes, 0, bytes.length);
+
+                ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+                oos.writeObject(bytes);
+                oos.flush();
+
+                socket.close();
+
+                final String sentMsg = "File sent to: " + socket.getInetAddress();
+                MyCamera.this.runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Toast.makeText(MyCamera.this,
+                                sentMsg,
+                                Toast.LENGTH_LONG).show();
+                    }});
+
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } finally {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
+        }
+    }
 }
