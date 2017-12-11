@@ -41,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(cameraIntent);
     }
 
-    public void onRemoteMyCameraButtonClick(View v) {
-        Intent cameraIntent = new Intent(this, MyCamera.class);
+    public void onCameraToServerButtonClick(View v) {
+        Intent cameraIntent = new Intent(this, CameraToServerActivity.class);
         startActivity(cameraIntent);
     }
 

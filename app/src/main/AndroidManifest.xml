@@ -15,11 +15,8 @@
     <uses-permission
         android:name="android.permission.INTERNET"
         android:required="true" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!--<uses-permission android:name="android.permission.BLUETOOTH" />-->
-    <!--<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />-->
-    <!--<uses-permission android:name="android.permission.RECORD_AUDIO" />-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -50,10 +47,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.jcbriones.gmu.remotecamera.MainActivity" />
         </activity>
-        <activity android:name=".MyCamera">
+        <activity android:name=".CameraToServerActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.jcbriones.gmu.remotecamera.MainActivity" />
+        </activity>
+        <activity android:name=".PhotoGalleryActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jcbriones.gmu.remotecamera.CameraControllerActivity" />
         </activity>
 
         <provider
@@ -66,7 +68,6 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <activity android:name=".PhotoGalleryActivity"></activity>
     </application>
 
 </manifest>
