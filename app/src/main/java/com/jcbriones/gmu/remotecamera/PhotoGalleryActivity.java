@@ -29,11 +29,11 @@ public class PhotoGalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_photo_gallery);
 
-        //gridView = (GridView) findViewById(R.id.gridView);
+        gridView = (GridView) findViewById(R.id.grid_view);
         getImagesFromServer();
     }
 
-    public void getImagesFromServer(){
+    public void getImagesFromServer() {
 
         RequestQueue queue = Volley.newRequestQueue(this);
 

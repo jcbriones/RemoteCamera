@@ -55,6 +55,11 @@
         <activity android:name=".PhotoGalleryActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.jcbriones.gmu.remotecamera.CameraToServerActivity" />
+        </activity>
+        <activity android:name=".LocalPhotoGalleryActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.jcbriones.gmu.remotecamera.CameraControllerActivity" />
         </activity>
 

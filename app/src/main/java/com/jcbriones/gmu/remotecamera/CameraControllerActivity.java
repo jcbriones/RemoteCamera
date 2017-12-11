@@ -40,7 +40,7 @@ public class CameraControllerActivity extends Activity {
     };
 
     public void onViewAllPicturesButtonClick(View v) {
-        Intent controllerIntent = new Intent(this, PhotoGalleryActivity.class);
+        Intent controllerIntent = new Intent(this, LocalPhotoGalleryActivity.class);
         startActivity(controllerIntent);
     }
 
@@ -141,7 +141,6 @@ public class CameraControllerActivity extends Activity {
                     public void run() {
                         if (file.exists()) {
                             Bitmap bmp = BitmapFactory.decodeFile(file.getAbsolutePath());
-                            //imageView.setImageBitmap(bmp);
                             // Scale the image to fit in the view
                             int nh = (int) ( bmp.getHeight() * (512.0 / bmp.getWidth()) );
                             Bitmap scaled = Bitmap.createScaledBitmap(bmp, 512, nh, true);

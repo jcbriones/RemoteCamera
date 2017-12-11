@@ -11,11 +11,9 @@ public class ImageObject {
     private String imageUrl;
 
     public  ImageObject(JSONObject jsonObject){
-        System.out.println("Image Object Enter");
         if(jsonObject == null) return;
         this.id = jsonObject.optInt("id");
         this.imageUrl = "http://madeby.jcbriones.com/api_477/" + jsonObject.optString("url");
-        System.out.println("Leave");
     }
 
     public int getId() {

@@ -140,6 +140,11 @@ public class CameraToServerActivity extends AppCompatActivity {
         }
     };
 
+    public void onViewAllPicturesButtonClick(View v) {
+        Intent controllerIntent = new Intent(this, PhotoGalleryActivity.class);
+        startActivity(controllerIntent);
+    }
+
     private void uploadPhoto(View v) {
         List<Header> headers = new ArrayList<Header>();
         headers.add(new BasicHeader("Accept", "application/json"));
