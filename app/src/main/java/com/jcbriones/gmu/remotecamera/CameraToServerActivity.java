@@ -1,5 +1,3 @@
-
-
 package com.jcbriones.gmu.remotecamera;
 
 import android.content.Context;
@@ -36,144 +34,26 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.message.BasicHeader;
 
+/**
+ * Created by jayzybriones on 12/5/17.
+ */
+
 public class CameraToServerActivity extends AppCompatActivity {
 
     private Context myContext = MainActivity.getAppContext();
 
     private static final int ACTION_TAKE_PHOTO_B = 1;
-
     private static final String BITMAP_STORAGE_KEY = "viewbitmap";
     private static final String IMAGEVIEW_VISIBILITY_STORAGE_KEY = "imageviewvisibility";
     private ImageView mImageView;
     private Button mBtnUpload;
     private Bitmap mImageBitmap;
-
     private String mCurrentPhotoPath;
 
     private static final String JPEG_FILE_PREFIX = "IMG_";
     private static final String JPEG_FILE_SUFFIX = ".jpg";
 
-    private AlbumStorageDirFactory mAlbumStorageDirFactory = null;
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = JPEG_FILE_PREFIX + timeStamp + "_";
-        File albumF = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File imageF = File.createTempFile(imageFileName, JPEG_FILE_SUFFIX, albumF);
-        return imageF;
-    }
-
-    private File setUpPhotoFile() throws IOException {
-        File f = createImageFile();
-        mCurrentPhotoPath = f.getAbsolutePath();
-        return f;
-    }
-
-    private void setPic() {
-        /* Get the size of the ImageView */
-        int targetW = mImageView.getWidth();
-        int targetH = mImageView.getHeight();
-
-		/* Get the size of the image */
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-		/* Figure out which way needs to be reduced less */
-        int scaleFactor = 1;
-        if ((targetW > 0) || (targetH > 0)) {
-            scaleFactor = Math.min(photoW / targetW, photoH / targetH);
-        }
-
-		/* Set bitmap options to scale the image decode target */
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
-
-		/* Decode the JPEG file into a Bitmap */
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-
-		/* Associate the Bitmap to the ImageView */
-        mImageView.setImageBitmap(bitmap);
-        mImageView.setVisibility(View.VISIBLE);
-
-        // show upload button
-        mBtnUpload.setVisibility(View.VISIBLE);
-    }
-
-    private void dispatchTakePictureIntent(int actionCode) {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = setUpPhotoFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-                // TODO handle this
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this, "com.jcbriones.gmu.remotecamera.provider", photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, 1);
-            }
-        }
-    }
-
-    Button.OnClickListener mTakePicOnClickListener = new Button.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            dispatchTakePictureIntent(ACTION_TAKE_PHOTO_B);
-        }
-    };
-
-    Button.OnClickListener mUploadPhoto = new Button.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            uploadPhoto(v);
-            finish();
-        }
-    };
-
-    public void onViewAllPicturesButtonClick(View v) {
-        Intent controllerIntent = new Intent(this, PhotoGalleryActivity.class);
-        startActivity(controllerIntent);
-    }
-
-    private void uploadPhoto(View v) {
-        List<Header> headers = new ArrayList<Header>();
-        headers.add(new BasicHeader("Accept", "application/json"));
-
-        StreamBackendClient.putImage(
-                myContext,
-                mCurrentPhotoPath,
-                new JsonHttpResponseHandler() {
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                        Toast toast;
-
-                        try {
-                            String data = response.getString("status");
-                            if (data.equals("done")) {
-                                toast = Toast.makeText(MainActivity.getAppContext(), "Photo Uploaded", Toast.LENGTH_SHORT);
-                                toast.show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    public void onFailure(int statusCode, Header[] headers, JSONArray response) {
-                        Toast toast = Toast.makeText(MainActivity.getAppContext(), "Photo Upload Failed. " + response.toString(), Toast.LENGTH_SHORT);
-                        toast.show();
-                    }
-                });
-    }
+    private AlbumStorageDirFactory mAlbumStorageDirFactory;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -250,6 +130,124 @@ public class CameraToServerActivity extends AppCompatActivity {
         );
     }
 
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = JPEG_FILE_PREFIX + timeStamp + "_";
+        File albumF = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File imageF = File.createTempFile(imageFileName, JPEG_FILE_SUFFIX, albumF);
+        return imageF;
+    }
+
+    private File setUpPhotoFile() throws IOException {
+        File f = createImageFile();
+        mCurrentPhotoPath = f.getAbsolutePath();
+        return f;
+    }
+
+    private void setPic() {
+        /* Get the size of the ImageView */
+        int targetW = mImageView.getWidth();
+        int targetH = mImageView.getHeight();
+
+		/* Get the size of the image */
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+		/* Figure out which way needs to be reduced less */
+        int scaleFactor = 1;
+        if ((targetW > 0) || (targetH > 0)) {
+            scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+        }
+
+		/* Set bitmap options to scale the image decode target */
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+		/* Decode the JPEG file into a Bitmap */
+        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+
+		/* Associate the Bitmap to the ImageView */
+        mImageView.setImageBitmap(bitmap);
+        mImageView.setVisibility(View.VISIBLE);
+
+        // show upload button
+        mBtnUpload.setVisibility(View.VISIBLE);
+    }
+
+    private void dispatchTakePictureIntent(int actionCode) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = setUpPhotoFile();
+            } catch (IOException ex) {
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this, "com.jcbriones.gmu.remotecamera.provider", photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, 1);
+            }
+        }
+    }
+
+    Button.OnClickListener mTakePicOnClickListener = new Button.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            dispatchTakePictureIntent(ACTION_TAKE_PHOTO_B);
+        }
+    };
+
+    Button.OnClickListener mUploadPhoto = new Button.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            uploadPhoto(v);
+            finish();
+        }
+    };
+
+    public void onViewAllPicturesButtonClick(View v) {
+        Intent controllerIntent = new Intent(this, PhotoGalleryActivity.class);
+        startActivity(controllerIntent);
+    }
+
+    private void uploadPhoto(View v) {
+        List<Header> headers = new ArrayList<Header>();
+        headers.add(new BasicHeader("Accept", "application/json"));
+
+        StreamBackendClient.putImage(
+                myContext,
+                mCurrentPhotoPath,
+                new JsonHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                        Toast toast;
+
+                        try {
+                            String data = response.getString("status");
+                            if (data.equals("done")) {
+                                toast = Toast.makeText(MainActivity.getAppContext(), "Photo Uploaded", Toast.LENGTH_SHORT);
+                                toast.show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void onFailure(int statusCode, Header[] headers, JSONArray response) {
+                        Toast toast = Toast.makeText(MainActivity.getAppContext(), "Photo Upload Failed. " + response.toString(), Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                });
+    }
+
     public static boolean isIntentAvailable(Context context, String action) {
         final PackageManager packageManager = context.getPackageManager();
         final Intent intent = new Intent(action);
@@ -263,7 +261,7 @@ public class CameraToServerActivity extends AppCompatActivity {
         if (isIntentAvailable(this, intentName)) {
             btn.setOnClickListener(onClickListener);
         } else {
-            btn.setText(getText(R.string.cannot).toString() + " " + btn.getText());
+            btn.setText((getText(R.string.cannot).toString() + " " + btn.getText()));
             btn.setClickable(false);
         }
     }

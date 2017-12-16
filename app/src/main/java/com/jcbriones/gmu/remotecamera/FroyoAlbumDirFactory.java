@@ -1,12 +1,12 @@
 package com.jcbriones.gmu.remotecamera;
 
-/**
- * Created by jayzybriones on 12/5/17.
- */
-
 import java.io.File;
 
 import android.os.Environment;
+
+/**
+ * Created by jayzybriones on 12/5/17.
+ */
 
 public final class FroyoAlbumDirFactory extends AlbumStorageDirFactory {
 

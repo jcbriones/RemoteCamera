@@ -1,12 +1,11 @@
 package com.jcbriones.gmu.remotecamera;
 
+import java.io.File;
+import android.os.Environment;
+
 /**
  * Created by jayzybriones on 12/5/17.
  */
-
-
-import java.io.File;
-import android.os.Environment;
 
 public final class BaseAlbumDirFactory extends AlbumStorageDirFactory {
 

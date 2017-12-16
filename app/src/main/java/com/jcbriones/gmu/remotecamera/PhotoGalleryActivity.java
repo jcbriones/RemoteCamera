@@ -2,7 +2,6 @@ package com.jcbriones.gmu.remotecamera;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.webkit.WebView;
 import android.widget.GridView;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -17,6 +16,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+/**
+ * Created by jayzybriones on 12/5/17.
+ */
 
 public class PhotoGalleryActivity extends AppCompatActivity {
     private static String IMAGES_URL = "http://madeby.jcbriones.com/api_477/get_images.php";
