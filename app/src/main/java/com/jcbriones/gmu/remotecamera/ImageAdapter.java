@@ -19,7 +19,6 @@ public class ImageAdapter extends BaseAdapter {
 
     private LayoutInflater mLayoutInflate;
 
-
     public ImageAdapter (Context context, ArrayList<ImageObject> imageObjects){
         this.context = context;
         this.imageObjects = imageObjects;

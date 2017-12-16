@@ -35,7 +35,6 @@ public class RemoteCameraActivity extends Activity {
     private CameraPreview mCameraPreview;
     private ServerSocket serverSocket;
     private TextView info;
-    private String fileName;
     String mCurrentPhotoPath;
 
     private static final String JPEG_FILE_PREFIX = "IMG_";
@@ -52,7 +51,6 @@ public class RemoteCameraActivity extends Activity {
         FrameLayout preview = (FrameLayout) findViewById(R.id.camera_preview);
         preview.addView(mCameraPreview);
         info = (TextView) findViewById(R.id.info);
-        fileName = "tosend.jpg";
 
         captureButton = (ImageButton) findViewById(R.id.button_capture);
         captureButton.setOnClickListener(new View.OnClickListener() {
@@ -82,8 +80,6 @@ public class RemoteCameraActivity extends Activity {
     /**
      * Helper method to access the camera returns null if it cannot get the
      * camera or does not exist
-     *
-     * @return
      */
     private Camera getCameraInstance() {
         Camera camera = null;
@@ -132,7 +128,9 @@ public class RemoteCameraActivity extends Activity {
         return f;
     }
 
-    // Using ServerSocket to start listening for incoming triggers
+    /**
+     * Start server listening at port 8080 assuming no one uses this port
+     */
     public class ServerSocketThread extends Thread {
         private static final int SocketServerPORT = 8080;
 
@@ -174,8 +172,8 @@ public class RemoteCameraActivity extends Activity {
 
                     @Override
                     public void run() {
-                        info.setText("Connect at: " + ip
-                                + "Port: " + serverSocket.getLocalPort());
+                        info.setText(("Connect at: " + ip
+                                + "Port: " + serverSocket.getLocalPort()));
                     }});
 
                 while (true) {
@@ -198,7 +196,9 @@ public class RemoteCameraActivity extends Activity {
 
     }
 
-    // Thread for sending the file to the other device
+    /**
+     * Thread for sending the file to the other device
+     */
     public class FileTxThread extends Thread {
         Socket socket;
 

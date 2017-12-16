@@ -42,7 +42,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     @Override
     public void surfaceChanged(SurfaceHolder surfaceHolder, int format,
                                int width, int height) {
-        // start preview with new settings
+        // Re/Start Preview after surface change
         try {
             mCamera.setPreviewDisplay(surfaceHolder);
             mCamera.startPreview();

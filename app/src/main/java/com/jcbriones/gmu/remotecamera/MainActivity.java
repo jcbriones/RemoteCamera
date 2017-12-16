@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.CAMERA
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
         // Ask the user for permissions
         verifyCameraPermissions();
     }
-
 
     /**
      * Checks for app camera permissions
@@ -70,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
-
 
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
         new AlertDialog.Builder(MainActivity.this)

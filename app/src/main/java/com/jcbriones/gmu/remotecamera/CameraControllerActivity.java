@@ -92,7 +92,6 @@ public class CameraControllerActivity extends Activity {
                     fos = new FileOutputStream(file);
                     fos.write(bytes);
                 } catch (ClassNotFoundException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 } finally {
                     if(fos!=null){
@@ -143,7 +142,6 @@ public class CameraControllerActivity extends Activity {
                     try {
                         socket.close();
                     } catch (IOException e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                 }
