@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     tools:context="com.jcbriones.gmu.remotecamera.CameraControllerActivity">
 
     <ImageView
@@ -24,6 +25,7 @@
 
     <Button
         android:id="@+id/button"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -58,7 +60,8 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Address" />
+                android:text="Address"
+                android:textColor="@android:color/background_light" />
 
             <EditText
                 android:id="@+id/editTextAddress"
@@ -70,6 +73,7 @@
                 android:ems="10"
                 android:inputType="text|numberDecimal"
                 android:text=""
+                android:textColor="@android:color/background_light"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/image_result" />
         </LinearLayout>
@@ -84,7 +88,8 @@
                 android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Port" />
+                android:text="Port"
+                android:textColor="@android:color/background_light" />
 
             <EditText
                 android:id="@+id/editTextPort"
@@ -96,6 +101,7 @@
                 android:ems="10"
                 android:inputType="number"
                 android:text="8080"
+                android:textColor="@android:color/background_light"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/editTextAddress" />
 

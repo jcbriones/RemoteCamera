@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     tools:context="com.jcbriones.gmu.remotecamera.MainActivity">
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -14,6 +16,7 @@
         android:layout_marginStart="8dp"
         android:text="Created by Jc Briones and Sarah Borghei"
         android:textAlignment="center"
+        android:textColor="@android:color/background_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
@@ -29,50 +32,65 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Please select an option"
+        android:textColor="@android:color/background_light"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/remoteButton"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
-        android:onClick="onRemoteCameraButtonClick"
-        android:text="Remote Camera"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/textView2"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:layout_editor_absoluteX="0dp">
 
-    <Button
-        android:id="@+id/controllerButton"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:onClick="onCameraToServerButtonClick"
-        android:text="Upload to Server"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/controllerButton2" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/controllerButton2"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:onClick="onCameraControllerButtonClick"
-        android:text="Camera Controller"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/remoteButton" />
+            <ImageButton
+                android:id="@+id/remote_camera"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:onClick="onRemoteCameraButtonClick"
+                app:srcCompat="@drawable/remote_camera"
+                tools:layout_editor_absoluteX="33dp"
+                tools:layout_editor_absoluteY="101dp" />
+
+            <ImageButton
+                android:id="@+id/camera_controller"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:onClick="onCameraControllerButtonClick"
+                app:srcCompat="@drawable/camera_controller"
+                tools:layout_editor_absoluteX="213dp"
+                tools:layout_editor_absoluteY="81dp" />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:id="@+id/upload_to_server"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:onClick="onCameraToServerButtonClick"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/upload_to_server"
+            tools:layout_editor_absoluteY="299dp" />
+
+    </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
