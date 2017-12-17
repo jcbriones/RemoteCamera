@@ -52,7 +52,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.jcbriones.gmu.remotecamera.MainActivity" />
         </activity>
-        <activity android:name=".PhotoGalleryActivity">
+        <activity android:name=".RemotePhotoGalleryActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.jcbriones.gmu.remotecamera.CameraToServerActivity" />
@@ -73,6 +73,7 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
+        <activity android:name=".FullPhotoViewActivity"></activity>
     </application>
 
 </manifest>

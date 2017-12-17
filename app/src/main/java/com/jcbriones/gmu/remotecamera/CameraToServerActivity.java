@@ -205,7 +205,7 @@ public class CameraToServerActivity extends AppCompatActivity {
     };
 
     public void onViewAllPicturesButtonClick(View v) {
-        Intent controllerIntent = new Intent(this, PhotoGalleryActivity.class);
+        Intent controllerIntent = new Intent(this, RemotePhotoGalleryActivity.class);
         startActivity(controllerIntent);
     }
 

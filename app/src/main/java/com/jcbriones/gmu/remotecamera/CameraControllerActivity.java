@@ -26,10 +26,9 @@ import java.util.Date;
  */
 
 public class CameraControllerActivity extends Activity {
-    public void onViewAllPicturesButtonClick(View v) {
-        Intent controllerIntent = new Intent(this, LocalPhotoGalleryActivity.class);
-        startActivity(controllerIntent);
-    }
+
+    private static final String JPEG_FILE_PREFIX = "IMG_";
+    private static final String JPEG_FILE_SUFFIX = ".jpg";
 
     EditText editTextAddress, editTextPort;
     ImageButton buttonTakePicture;
@@ -58,6 +57,11 @@ public class CameraControllerActivity extends Activity {
             }});
     }
 
+    public void onViewAllPicturesButtonClick(View v) {
+        Intent controllerIntent = new Intent(this, LocalPhotoGalleryActivity.class);
+        startActivity(controllerIntent);
+    }
+
     /**
      * Client receives data from Server
      */
@@ -71,6 +75,16 @@ public class CameraControllerActivity extends Activity {
             dstPort = port;
         }
 
+        // Create and allot image file with the date as file name
+        private File createImageFile() throws IOException {
+
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String imageFileName = JPEG_FILE_PREFIX + timeStamp + "_";
+            File albumF = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            File imageF = File.createTempFile(imageFileName, JPEG_FILE_SUFFIX, albumF);
+            return imageF;
+        }
+
         @Override
         public void run() {
             Socket socket = null;
@@ -80,9 +94,7 @@ public class CameraControllerActivity extends Activity {
 
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
                         .format(new Date());
-                file = new File(
-                        Environment.getExternalStorageDirectory(),
-                        "IMG_" + timeStamp + ".jpg");
+                file = createImageFile();
 
                 ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
                 byte[] bytes;
