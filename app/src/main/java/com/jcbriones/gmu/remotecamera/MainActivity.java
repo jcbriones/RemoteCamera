@@ -122,10 +122,11 @@ public class MainActivity extends AppCompatActivity {
      * Toast how to use app
      */
     public void onHelpClick(View v) {
-        Toast.makeText(this, "This app help you remotely take a picture.\nIt requires 2 phones with same app installed.\n" +
-                "Cloud uploads pictures to the server.\n\n" +
-                "  1. Press camera button - left icon\n  2. On other device press control button - right icon\n  3. Write the IP of 1st device on second\n" +
-                "  4. Press camera button",Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "This app help you remotely take a picture.\nIt requires 2 devices with same app installed.\n" +
+                "The Cloud feature uploads pictures taken to the cloud server and available to be viewed in other devices as well.\n\n" +
+                "  To take a picture remotely:\n" +
+                "  1. Press Camera button (left icon)\n  2. On the other device, press the Controller button (right icon)\n  3. Write the IP address of 1st device on the 2nd device\n" +
+                "  4. Press Camera button to take picture on the 2nd device",Toast.LENGTH_LONG).show();
     }
         public static Context getAppContext() {
         return MainActivity.context;
