@@ -11,17 +11,21 @@
         android:layout_height="wrap_content"
         android:gravity="center">
 
-        <Button
+        <ImageButton
             android:id="@+id/btnTake"
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="@android:style/Widget.ImageButton"
+            android:src="@drawable/remote_camera"
+            android:background="@null"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="@string/btnTake" />
 
-        <Button
+        <ImageButton
             android:id="@+id/button2"
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="@android:style/Widget.ImageButton"
+            android:src="@drawable/image_gallery"
+            android:background="@null"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
@@ -31,9 +35,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
+        <ImageButton
             android:id="@+id/btnUpload"
-            style="@style/Widget.AppCompat.Button.Colored"
+            style="@android:style/Widget.ImageButton"
+            android:src="@drawable/upload_to_server"
+            android:background="@null"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"

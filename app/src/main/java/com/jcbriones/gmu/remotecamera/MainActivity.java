@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 /**
  * Created by jayzybriones on 12/5/17.
+ * Updated by saraborghei on 12/17/17.
  */
 
 public class MainActivity extends AppCompatActivity {
@@ -78,7 +79,9 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
-
+    /**
+     * Starts activity_remote_camera
+     */
     public void onRemoteCameraButtonClick(View v) {
         if (hasCameraPermissions()) {
             Intent cameraIntent = new Intent(this, RemoteCameraActivity.class);
@@ -89,6 +92,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Starts activity_camera_controller
+     */
     public void onCameraControllerButtonClick(View v) {
         if (hasCameraPermissions()) {
             Intent cameraIntent = new Intent(this, CameraControllerActivity.class);
@@ -99,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Start activity_camera_to_server
+     */
     public void onCameraToServerButtonClick(View v) {
         if (hasCameraPermissions()) {
             Intent cameraIntent = new Intent(this, CameraToServerActivity.class);
@@ -109,7 +118,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static Context getAppContext() {
+    /**
+     * Toast how to use app
+     */
+    public void onHelpClick(View v) {
+        Toast.makeText(this, "This app help you remotely take a picture.\nIt requires 2 phones with same app installed.\n" +
+                "Cloud uploads pictures to the server.\n\n" +
+                "  1. Press camera button - left icon\n  2. On other device press control button - right icon\n  3. Write the IP of 1st device on second\n" +
+                "  4. Press camera button",Toast.LENGTH_LONG).show();
+    }
+        public static Context getAppContext() {
         return MainActivity.context;
     }
 }

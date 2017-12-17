@@ -21,7 +21,6 @@
 
     <ImageButton
         android:id="@+id/button_capture"
-        style="@android:style/Widget.ImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -30,7 +29,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/camera_icon" />
+        android:src="@drawable/remote_camera"
+        android:background="@null"/>
 
     <TextView
         android:id="@+id/info"

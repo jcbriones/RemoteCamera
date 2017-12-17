@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ import cz.msebera.android.httpclient.message.BasicHeader;
 
 /**
  * Created by jayzybriones on 12/5/17.
+ * Updated by saraborghei on 12/17/17.
  */
 
 public class CameraToServerActivity extends AppCompatActivity {
@@ -45,7 +47,7 @@ public class CameraToServerActivity extends AppCompatActivity {
     private static final String BITMAP_STORAGE_KEY = "viewbitmap";
     private static final String IMAGEVIEW_VISIBILITY_STORAGE_KEY = "imageviewvisibility";
     private ImageView mImageView;
-    private Button mBtnUpload;
+    private ImageButton mBtnUpload;
     private Bitmap mImageBitmap;
     private String mCurrentPhotoPath;
 
@@ -60,14 +62,14 @@ public class CameraToServerActivity extends AppCompatActivity {
         mImageView = (ImageView) findViewById(R.id.imagePreview);
         mImageBitmap = null;
 
-        Button picBtn = (Button) findViewById(R.id.btnTake);
+        ImageButton picBtn = (ImageButton) findViewById(R.id.btnTake);
         setBtnListenerOrDisable(
                 picBtn,
                 mTakePicOnClickListener,
                 MediaStore.ACTION_IMAGE_CAPTURE
         );
 
-        mBtnUpload = (Button) findViewById(R.id.btnUpload);
+        mBtnUpload = (ImageButton) findViewById(R.id.btnUpload);
         mBtnUpload.setVisibility(View.INVISIBLE);
         setBtnListenerOrDisable(
                 mBtnUpload,
@@ -248,11 +250,11 @@ public class CameraToServerActivity extends AppCompatActivity {
         return list.size() > 0;
     }
 
-    private void setBtnListenerOrDisable(Button btn, Button.OnClickListener onClickListener, String intentName) {
+    private void setBtnListenerOrDisable(ImageButton btn, Button.OnClickListener onClickListener, String intentName) {
         if (isIntentAvailable(this, intentName)) {
             btn.setOnClickListener(onClickListener);
         } else {
-            btn.setText((getText(R.string.cannot).toString() + " " + btn.getText()));
+            //btn.setText((getText(R.string.cannot).toString() + " " + btn.getText()));
             btn.setClickable(false);
         }
     }

@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 /**
  * Created by jayzybriones on 12/8/17.
+ * Updated by saraborghei on 12/17/17.
  */
 
 public class RemoteCameraActivity extends Activity {
@@ -57,6 +58,7 @@ public class RemoteCameraActivity extends Activity {
             @Override
             public void onClick(View v) {
                 mCamera.takePicture(null, null, mPicture);
+                Toast.makeText(v.getContext(), "Picture taken!", Toast.LENGTH_SHORT).show();
             }
         });
 
